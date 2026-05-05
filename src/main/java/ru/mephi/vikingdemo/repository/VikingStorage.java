@@ -62,4 +62,8 @@ public class VikingStorage {
     public void deleteById(int id) {
         vikingRepository.deleteById(id);
     }
+
+    public List<Integer> findAllIds() {
+        return vikingRepository.findAllIds();
+    }
 }

@@ -7,6 +7,8 @@ package ru.mephi.vikingdemo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.mephi.vikingdemo.gui.VikingDesktopFrame;
+import ru.mephi.vikingdemo.gui.VikingSpecificForm;
+import ru.mephi.vikingdemo.service.SpecificVikingService;
 import ru.mephi.vikingdemo.service.VikingService;
 
 /**
@@ -17,6 +19,7 @@ import ru.mephi.vikingdemo.service.VikingService;
 public class VikingListener {
     private VikingService service;
     private VikingDesktopFrame gui;
+    private VikingSpecificForm gui2;
 
     @Autowired
     public VikingListener(VikingService service) {
@@ -26,6 +29,11 @@ public class VikingListener {
     public void setGui(VikingDesktopFrame gui){
         this.gui = gui;
     }
+
+    public void setGuiMenu(VikingSpecificForm gui2){
+        this.gui2 = gui2;
+    }
+
 
     void testAdd() {
         gui.addNewViking(service.createRandomViking());

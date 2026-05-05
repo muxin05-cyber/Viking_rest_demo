@@ -1,6 +1,8 @@
 package ru.mephi.vikingdemo.gui;
 
+import ru.mephi.vikingdemo.controller.VikingListener;
 import ru.mephi.vikingdemo.model.Viking;
+import ru.mephi.vikingdemo.service.SpecificVikingService;
 import ru.mephi.vikingdemo.service.VikingService;
 
 import javax.swing.JButton;
@@ -20,9 +22,13 @@ public class VikingDesktopFrame extends JFrame {
 
     private final VikingService vikingService;
     private final VikingTableModel tableModel = new VikingTableModel();
+    private final SpecificVikingService specificVikingService;
+    private final VikingListener listener;
 
-    public VikingDesktopFrame(VikingService vikingService) {
+    public VikingDesktopFrame(VikingService vikingService, VikingListener listener) {
         this.vikingService = vikingService;
+        this.listener = listener;
+        this.specificVikingService = new SpecificVikingService(vikingService);
 
         setTitle("Viking Demo");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -40,10 +46,20 @@ public class VikingDesktopFrame extends JFrame {
 
         JButton createButton = new JButton("Create random viking");
         createButton.addActionListener(event -> onCreateViking());
+        JButton additionalButton = new JButton("Additional functional");
+        additionalButton.addActionListener(event -> openAdditionalMenu());
+        JButton generateButton = new JButton("Generate 10 Vikings");
+        generateButton.addActionListener(event -> {
+            vikingService.createRandomVikings(10);
+            refreshTable();
+        });
+
 
         JPanel bottomPanel = new JPanel();
         bottomPanel.add(createButton);
+        bottomPanel.add(additionalButton);
         add(bottomPanel, BorderLayout.SOUTH);
+        bottomPanel.add(generateButton);
         
         onInit();
     }
@@ -51,6 +67,12 @@ public class VikingDesktopFrame extends JFrame {
     private void onCreateViking() {
         Viking viking = vikingService.createRandomViking();
         tableModel.addViking(viking);
+    }
+
+    private void openAdditionalMenu(){
+        VikingSpecificForm frame = new VikingSpecificForm(specificVikingService, vikingService);
+        listener.setGuiMenu(frame);
+        frame.setVisible(true);
     }
     
     public void addNewViking(Viking viking){
@@ -63,6 +85,13 @@ public class VikingDesktopFrame extends JFrame {
             for (Viking viking : all) {
                 tableModel.addViking(viking);
             }
+        }
+    }
+
+    private void refreshTable() {
+        List<Viking> all = vikingService.findAll();
+        for (Viking viking : all) {
+            tableModel.addViking(viking);
         }
     }
 }

@@ -36,4 +36,17 @@ public class VikingService {
     public void deleteById(int id) {
         vikingStorage.deleteById(id);
     }
+
+    public List<Integer> findAllIds() {
+        return vikingStorage.findAllIds();
+    }
+
+    public List<Viking> createRandomVikings(int count) {
+        return java.util.stream.IntStream.range(0, count)
+                .mapToObj(i -> vikingFactory.createRandomViking())
+                .map(viking -> vikingStorage.save(viking))
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+
 }

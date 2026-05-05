@@ -4,14 +4,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.mephi.vikingdemo.model.Viking;
+import ru.mephi.vikingdemo.service.SpecificVikingService;
 import ru.mephi.vikingdemo.service.VikingService;
 
 import java.util.List;
-import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
 @RequestMapping("/api/vikings")
@@ -20,10 +18,12 @@ public class VikingController {
 
     private final VikingService vikingService;
     private VikingListener vikingListener;
+    private final SpecificVikingService specificVikingService;
 
-    public VikingController(VikingService vikingService, VikingListener vikingListener) {
+    public VikingController(VikingService vikingService, VikingListener vikingListener, SpecificVikingService specificVikingService) {
         this.vikingService = vikingService;
         this.vikingListener = vikingListener;
+        this.specificVikingService = specificVikingService;
     }
     
     @GetMapping
@@ -58,4 +58,62 @@ public class VikingController {
         System.out.println("POST api/vikings/post called");
         vikingListener.testAdd();
     }
+
+    @PostMapping("/by-axes")
+    @Operation(summary = "Получить викингов с 1 или 2 топорами",
+            operationId = "getByAxes")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Викинги успешно получены")
+    })
+    public int quantityVikingWithOneOrTwoAxes() {
+        return specificVikingService.countVikingsByAxes();
+    }
+
+
+    @PostMapping("/by-beard-and-hair")
+    @Operation(summary = "Посчитать викингов с определённой бородой и цветом волос",
+            operationId = "countByBeardAndHair")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Количество викингов успешно получено")
+    })
+    public int countVikingWithCertainBeardAndHair(
+            @RequestParam String beard,
+            @RequestParam String hair) {
+        return specificVikingService.countVikingsByBeardAndHair(beard, hair);
+    }
+
+    @PostMapping("/by-age")
+    @Operation(summary = "Посчитать викингов в определённом диапазоне",
+            operationId = "countByAge")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Количество викингов успешно получено")
+    })
+    public int countVikingByAge(
+            @RequestParam int start,
+            @RequestParam int end,
+            @RequestParam boolean inSpanOrNo) {
+
+        if (inSpanOrNo){
+
+            return specificVikingService.countVikingsByAgeInSpan(start, end);
+        }else{
+            return specificVikingService.countVikingsByAgeWithoutSpan(start, end);
+        }
+
+    }
+
+
+    @PostMapping("/generate")
+    @Operation(summary = "Массовая генерация случайных викингов",
+            operationId = "generateVikings")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Викинги успешно созданы")
+    })
+    public List<Viking> generateVikings(@RequestParam(defaultValue = "5") int count) {
+        System.out.println("POST /api/vikings/generate called with count=" + count);
+        return vikingService.createRandomVikings(count);
+    }
+
+
+
 }

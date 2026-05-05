@@ -94,6 +94,11 @@ public class VikingRepository {
         jdbcTemplate.update(sql, id);
     }
 
+    public List<Integer> findAllIds() {
+        String sql = "select id from vikings order by id";
+        return jdbcTemplate.queryForList(sql, Integer.class);
+    }
+
     public void deleteAll() {
         jdbcTemplate.update("delete from vikings");
     }

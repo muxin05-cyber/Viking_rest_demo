@@ -22,7 +22,7 @@ public class VikingDemoApplication {
         VikingService vikingService = context.getBean(VikingService.class);
         VikingListener vikingListener = context.getBean(VikingListener.class);    
         SwingUtilities.invokeLater(() -> {
-            VikingDesktopFrame frame = new VikingDesktopFrame(vikingService);
+            VikingDesktopFrame frame = new VikingDesktopFrame(vikingService, vikingListener);
             vikingListener.setGui(frame);
             frame.setVisible(true);
         });
