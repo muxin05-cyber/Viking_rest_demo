@@ -3,6 +3,7 @@ package ru.mephi.vikingdemo.service;
 import org.springframework.stereotype.Service;
 import ru.mephi.vikingdemo.model.Viking;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,10 +43,12 @@ public class VikingService {
     }
 
     public List<Viking> createRandomVikings(int count) {
-        return java.util.stream.IntStream.range(0, count)
-                .mapToObj(i -> vikingFactory.createRandomViking())
-                .map(viking -> vikingStorage.save(viking))
-                .collect(java.util.stream.Collectors.toList());
+        List<Viking> vikings = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            Viking viking = vikingFactory.createRandomViking();
+            vikings.add(vikingStorage.save(viking));
+        }
+        return vikings;
     }
 
 
