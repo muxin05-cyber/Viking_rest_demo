@@ -78,46 +78,17 @@ public class VikingSpecificForm extends JFrame {
             return;
         }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("Vikings with fabulous equipment\n\n");
 
-        for (int i = 0; i < vikings.size(); i++) {
-            Viking v = vikings.get(i);
-            sb.append(String.format("%d. %s\n", i + 1, v.name()));
-            sb.append(String.format("   Age: %d | Height: %d cm\n", v.age(), v.heightCm()));
-            sb.append(String.format("   Hair: %s | Beard: %s\n", v.hairColor(), v.beardStyle()));
-            sb.append(String.format("   Equipment: %s\n\n",
-                    v.equipment().stream()
-                            .map(e -> e.name() + " [" + e.quality() + "]")
-                            .collect(Collectors.joining(", "))));
-        }
-
-        textArea.setText(sb.toString());
+        textArea.setText(stringWithVikings("Vikings with fabulous equipment\n\n", vikings));
     }
 
     private void showRedBeardedSortedByAge() {
         List<Viking> vikings = specificVikingService.getRedBeardedSortedByAge();
-
         if (vikings.isEmpty()) {
             textArea.setText("Vikings with red beard did not find");
             return;
         }
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("Vikings with red beard (sorted by age)\n\n");
-
-        for (int i = 0; i < vikings.size(); i++) {
-            Viking v = vikings.get(i);
-            sb.append(String.format("%d. %s\n", i + 1, v.name()));
-            sb.append(String.format("   Age: %d | Height: %d cm\n", v.age(), v.heightCm()));
-            sb.append(String.format("   Hair: %s | Beard: %s\n", v.hairColor(), v.beardStyle()));
-            sb.append(String.format("   Equipment: %s\n\n",
-                    v.equipment().stream()
-                            .map(e -> e.name() + " [" + e.quality() + "]")
-                            .collect(Collectors.joining(", "))));
-        }
-
-        textArea.setText(sb.toString());
+        textArea.setText(stringWithVikings("Vikings with red beard (sorted by age)\n\n", vikings));
     }
 
     private void showMaxId() {
@@ -126,5 +97,22 @@ public class VikingSpecificForm extends JFrame {
 
     private void showEvenIds() {
         textArea.setText(specificVikingService.getEvenIdsFormatted());
+    }
+
+    private String stringWithVikings(String title, List <Viking> vikings){
+        StringBuilder sb = new StringBuilder();
+        sb.append(title);
+
+        for (int i = 0; i < vikings.size(); i++) {
+            Viking v = vikings.get(i);
+            sb.append(String.format("%d. %s\n", i + 1, v.name()));
+            sb.append(String.format("   Age: %d | Height: %d cm\n", v.age(), v.heightCm()));
+            sb.append(String.format("   Hair: %s | Beard: %s\n", v.hairColor(), v.beardStyle()));
+            sb.append(String.format("   Equipment: %s\n\n",
+                    v.equipment().stream()
+                            .map(e -> e.name() + " [" + e.quality() + "]")
+                            .collect(Collectors.joining(", "))));
+        }
+        return sb.toString();
     }
 }
