@@ -50,8 +50,8 @@ public class VikingDesktopFrame extends JFrame {
         additionalButton.addActionListener(event -> openAdditionalMenu());
         JButton generateButton = new JButton("Generate 10 Vikings");
         generateButton.addActionListener(event -> {
-            vikingService.createRandomVikings(10);
-            refreshTable();
+            List <Viking> vikings = vikingService.createRandomVikings(10);
+            refreshTable(vikings);
         });
 
 
@@ -88,9 +88,8 @@ public class VikingDesktopFrame extends JFrame {
         }
     }
 
-    private void refreshTable() {
-        List<Viking> all = vikingService.findAll();
-        for (Viking viking : all) {
+    private void refreshTable( List<Viking> new_vikings) {
+        for (Viking viking : new_vikings) {
             tableModel.addViking(viking);
         }
     }
