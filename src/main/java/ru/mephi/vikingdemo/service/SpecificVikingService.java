@@ -97,7 +97,7 @@ public class SpecificVikingService {
 
     public Integer getMaxId() {
         return getAllIds().stream()
-                .max(Integer::compareTo)
+                .max((a, b) -> a.compareTo(b))
                 .orElse(0);
     }
 
