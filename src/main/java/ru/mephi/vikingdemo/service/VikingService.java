@@ -6,6 +6,9 @@ import ru.mephi.vikingdemo.model.Viking;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.mephi.vikingdemo.repository.VikingStorage;
 
@@ -43,12 +46,8 @@ public class VikingService {
     }
 
     public List<Viking> createRandomVikings(int count) {
-        List<Viking> vikings = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            Viking viking = vikingFactory.createRandomViking();
-            vikings.add(vikingStorage.save(viking));
-        }
-        return vikings;
+        return Stream.generate(() -> vikingFactory.createRandomViking()).limit(count)
+                .map(viking -> vikingStorage.save(viking)).collect(Collectors.toList());
     }
 
 

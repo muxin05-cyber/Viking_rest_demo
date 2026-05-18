@@ -84,8 +84,8 @@ public class SpecificVikingService {
 
     public List<Viking> getRedBeardedSortedByAge() {
         return vikingService.findAll().stream()
-                .filter(v -> v.hairColor().name().equalsIgnoreCase("Red") ||
-                        v.beardStyle().name().equalsIgnoreCase("Red"))
+                .filter(v -> v.hairColor().name().equalsIgnoreCase("Red") &&
+                        !v.beardStyle().name().equalsIgnoreCase("CLEAN_SHAVEN"))
                 .sorted((v1, v2) -> Integer.compare(v1.age(), v2.age()))
                 .collect(Collectors.toList());
     }
